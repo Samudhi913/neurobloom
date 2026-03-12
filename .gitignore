@@ -1,0 +1,22 @@
+
+# Dependencies
+node_modules/
+client/node_modules/
+
+# Environment variables
+.env
+server/.env
+
+# Build output
+client/build/
+
+# TensorFlow model (optional - include if you want to track it)
+server/ml/model/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
