@@ -1,0 +1,26 @@
+.readiness-page  { min-height: calc(100vh - 68px); background: #f5f0ff; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.readiness-card  { background: #fff; border-radius: 24px; padding: 40px; width: 100%; max-width: 580px; box-shadow: 0 4px 24px rgba(180,160,220,0.15); }
+.readiness-header { margin-bottom: 28px; }
+.readiness-tag   { display: inline-block; background: #f0e9ff; color: #7c5cbf; border-radius: 20px; padding: 4px 14px; font-size: 0.82em; font-weight: 600; margin-bottom: 12px; }
+.readiness-header h2 { color: #7c5cbf; margin-bottom: 8px; font-size: 1.4em; }
+.readiness-header p  { color: #888; line-height: 1.6; font-size: 0.95em; }
+.readiness-progress-track { background: #f0e9ff; border-radius: 20px; height: 8px; margin-bottom: 8px; overflow: hidden; }
+.readiness-progress-fill  { background: #c4a8e8; height: 100%; border-radius: 20px; transition: width 0.3s ease; }
+.readiness-step  { color: #aaa; font-size: 0.85em; margin-bottom: 28px; }
+.readiness-question { background: #faf8ff; border: 1.5px solid #f0e9ff; border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+.readiness-q-icon   { font-size: 2em; flex-shrink: 0; }
+.readiness-question p { color: #333; font-size: 1.05em; line-height: 1.5; font-weight: 500; }
+.readiness-scale { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.readiness-scale-btn { display: flex; align-items: center; gap: 16px; background: #faf8ff; border: 1.5px solid #e2d9f3; border-radius: 14px; padding: 12px 18px; cursor: pointer; transition: all 0.2s; text-align: left; }
+.readiness-scale-btn:hover    { background: #f0e9ff; border-color: #c4a8e8; }
+.readiness-scale-btn.selected { background: #c4a8e8; border-color: #c4a8e8; }
+.scale-number  { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #7c5cbf; font-weight: 800; font-size: 0.95em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.readiness-scale-btn.selected .scale-number { background: rgba(255,255,255,0.3); color: #fff; }
+.scale-label   { color: #555; font-size: 0.9em; font-weight: 500; }
+.readiness-scale-btn.selected .scale-label  { color: #fff; }
+.readiness-error { color: #e05c5c; font-size: 0.875em; margin-bottom: 16px; text-align: center; }
+.readiness-nav   { display: flex; justify-content: flex-end; gap: 12px; }
+.readiness-nav-btn { padding: 12px 24px; border-radius: 12px; border: 1.5px solid #e2d9f3; background: #faf8ff; color: #7c5cbf; font-weight: 600; cursor: pointer; font-size: 0.95em; transition: all 0.2s; }
+.readiness-nav-btn:hover   { background: #f0e9ff; }
+.readiness-nav-btn.primary { background: #c4a8e8; border-color: #c4a8e8; color: #fff; }
+.readiness-nav-btn.primary:hover { background: #b490e0; }

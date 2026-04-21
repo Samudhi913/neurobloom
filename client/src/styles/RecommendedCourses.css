@@ -1,0 +1,23 @@
+.rec-page    { max-width: 900px; margin: 0 auto; padding: 60px 24px; background: #ffffff; min-height: calc(100vh - 68px); }
+.rec-summary { display: flex; align-items: center; gap: 32px; background: #fff; border: 1.5px solid #f0e9ff; border-radius: 24px; padding: 32px; margin-bottom: 48px; flex-wrap: wrap; }
+.rec-score-circle { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, #f0e9ff, #e2d9f3); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; border: 3px solid #c4a8e8; }
+.rec-score-number { font-size: 1.6em; font-weight: 800; color: #7c5cbf; }
+.rec-score-label  { font-size: 0.7em; color: #aaa; }
+.rec-summary-text h2 { color: #7c5cbf; margin-bottom: 8px; }
+.rec-summary-text p  { color: #666; line-height: 1.6; margin-bottom: 6px; }
+.rec-difficulty-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9em; margin-top: 8px; color: #333; }
+.rec-courses-section h3 { color: #7c5cbf; margin-bottom: 24px; font-size: 1.2em; text-transform: capitalize; }
+.rec-courses-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+.rec-course-card  { background: #fff; border: 1.5px solid #f0e9ff; border-radius: 18px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; transition: box-shadow 0.2s; }
+.rec-course-card:hover { box-shadow: 0 4px 16px rgba(180,160,220,0.15); }
+.rec-course-icon  { font-size: 2em; flex-shrink: 0; }
+.rec-course-info h4 { color: #333; margin-bottom: 6px; }
+.rec-course-info p  { color: #777; font-size: 0.9em; line-height: 1.5; margin-bottom: 10px; }
+.rec-course-meta  { display: flex; gap: 8px; }
+.rec-tag  { background: #f5f0ff; color: #7c5cbf; border-radius: 20px; padding: 4px 12px; font-size: 0.8em; font-weight: 600; text-transform: capitalize; }
+.rec-loading, .rec-empty { text-align: center; padding: 48px; color: #aaa; line-height: 1.8; }
+.rec-actions   { display: flex; gap: 16px; flex-wrap: wrap; }
+.rec-retry-btn { padding: 12px 24px; background: #f5f0ff; border: 1.5px solid #e2d9f3; border-radius: 12px; color: #7c5cbf; font-weight: 600; cursor: pointer; font-size: 0.95em; transition: background 0.2s; }
+.rec-retry-btn:hover { background: #e8deff; }
+.rec-back-btn  { padding: 12px 24px; background: #c4a8e8; border-radius: 12px; color: #fff; font-weight: 600; text-decoration: none; font-size: 0.95em; transition: background 0.2s; display: inline-block; }
+.rec-back-btn:hover { background: #b490e0; }

@@ -1,0 +1,11 @@
+.courses-page    { max-width: 1100px; margin: 0 auto; padding: 60px 24px; background: #ffffff; min-height: calc(100vh - 68px); }
+.courses-header  { margin-bottom: 48px; max-width: 600px; }
+.courses-header h1 { color: #7c5cbf; margin-bottom: 10px; }
+.courses-header p  { color: #888; line-height: 1.7; }
+.subjects-grid   { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 24px; }
+.subject-card    { background: #fff; border: 1.5px solid #f0e9ff; border-radius: 24px; padding: 32px 28px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 10px; }
+.subject-card:hover { box-shadow: 0 8px 24px rgba(180,160,220,0.15); transform: translateY(-2px); border-color: #c4a8e8; }
+.subject-icon   { font-size: 2.4em; display: block; }
+.subject-card h3 { color: #7c5cbf; font-size: 1.1em; }
+.subject-card p  { color: #888; font-size: 0.9em; line-height: 1.5; flex: 1; }
+.subject-cta    { color: #c4a8e8; font-weight: 700; font-size: 0.875em; margin-top: 4px; }

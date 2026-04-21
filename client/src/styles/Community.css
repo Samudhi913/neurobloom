@@ -1,0 +1,8 @@
+.community-page         { max-width: 1100px; margin: 0 auto; padding: 60px 24px; background: #ffffff; min-height: calc(100vh - 68px); }
+.community-header       { margin-bottom: 48px; }
+.community-header h1    { color: #7c5cbf; margin-bottom: 8px; }
+.community-header p     { color: #888; line-height: 1.6; }
+.community-coming-soon  { background: #faf8ff; border: 1.5px solid #f0e9ff; border-radius: 24px; padding: 80px 24px; text-align: center; }
+.coming-icon            { font-size: 3em; display: block; margin-bottom: 20px; }
+.community-coming-soon h2 { color: #7c5cbf; margin-bottom: 12px; }
+.community-coming-soon p  { color: #aaa; line-height: 1.6; }
