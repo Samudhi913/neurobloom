@@ -13,10 +13,9 @@ import Register from './pages/Register'
 import Quiz from './pages/Quiz'
 import ReadinessCheck from './pages/ReadinessCheck'
 import RecommendedCourses from './pages/RecommendedCourses'
-
-const StudentDash = () => <div style={{ padding: '40px', color: '#7c5cbf' }}>🌸 Student Dashboard — coming soon</div>
-const TeacherDash = () => <div style={{ padding: '40px', color: '#7c5cbf' }}>📚 Teacher Dashboard — coming soon</div>
-const ParentDash  = () => <div style={{ padding: '40px', color: '#7c5cbf' }}>👨‍👩‍👧 Parent Dashboard — coming soon</div>
+import StudentDashboard from './pages/StudentDashboard'
+import TeacherDashboard from './pages/TeacherDashboard'
+import ParentDashboard  from './pages/ParentDashboard'
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth()
@@ -41,9 +40,9 @@ function AppRoutes() {
         <Route path="/readiness/:subject" element={<ProtectedRoute allowedRoles={['student']}><ReadinessCheck /></ProtectedRoute>} />
         <Route path="/quiz/:subject"      element={<ProtectedRoute allowedRoles={['student']}><Quiz /></ProtectedRoute>} />
         <Route path="/courses/recommended" element={<ProtectedRoute allowedRoles={['student']}><RecommendedCourses /></ProtectedRoute>} />
-        <Route path="/dashboard/student"   element={<ProtectedRoute allowedRoles={['student']}><StudentDash /></ProtectedRoute>} />
-        <Route path="/dashboard/teacher"   element={<ProtectedRoute allowedRoles={['teacher']}><TeacherDash /></ProtectedRoute>} />
-        <Route path="/dashboard/parent"    element={<ProtectedRoute allowedRoles={['parent']}><ParentDash /></ProtectedRoute>} />
+        <Route path="/dashboard/student" element={<ProtectedRoute allowedRoles={['student']}><StudentDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/parent"  element={<ProtectedRoute allowedRoles={['parent']}><ParentDashboard /></ProtectedRoute>} />
       </Routes>
     </>
   )

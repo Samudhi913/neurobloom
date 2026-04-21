@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+const userRoutes   = require('./routes/userRoutes');
 const authRoutes   = require('./routes/authRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const quizRoutes   = require('./routes/quizRoutes');
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/auth',    authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/quiz',    quizRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => res.json({ message: '🌸 NeuroBloom API running' }));
 
