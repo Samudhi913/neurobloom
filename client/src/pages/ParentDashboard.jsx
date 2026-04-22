@@ -8,37 +8,56 @@ const difficultyColor = { easy: '#a8e6b0', intermediate: '#c4a8e8', hard: '#f0b8
 const subjectEmoji    = { math: '🔢', science: '🔬', english: '📝', history: '🏛️', art: '🎨' }
 
 export default function ParentDashboard() {
-  const { user } = useAuth()
-  const [students, setStudents] = useState([])
-  const [selected, setSelected] = useState(null)
-  const [results,  setResults]  = useState([])
-  const [loading,  setLoading]  = useState(true)
+  const { user }    = useAuth()
+  const [children,  setChildren]  = useState([])
+  const [selected,  setSelected]  = useState(null)
+  const [results,   setResults]   = useState([])
+  const [loading,   setLoading]   = useState(true)
   const [loadingResults, setLoadingResults] = useState(false)
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        // Fetch all students for now — in production filter by linkedStudents
-        const res = await axios.get('http://localhost:5000/api/users/students')
-        setStudents(res.data)
-        if (res.data.length > 0) handleSelectStudent(res.data[0]._id)
-      } catch (err) { console.error(err) }
-      finally { setLoading(false) }
-    }
-    fetchStudents()
-  }, [])
+  // Link child form
+  const [linkEmail, setLinkEmail] = useState('')
+  const [linkMsg,   setLinkMsg]   = useState('')
+  const [linking,   setLinking]   = useState(false)
+  const [showLink,  setShowLink]  = useState(false)
 
-  const handleSelectStudent = async (studentId) => {
-    setSelected(studentId)
+  useEffect(() => { fetchChildren() }, [])
+
+  const fetchChildren = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/users/my-children')
+      setChildren(res.data)
+      if (res.data.length > 0) handleSelectChild(res.data[0]._id)
+    } catch (err) { console.error(err) }
+    finally { setLoading(false) }
+  }
+
+  const handleSelectChild = async (childId) => {
+    setSelected(childId)
     setLoadingResults(true)
     try {
-      const res = await axios.get(`http://localhost:5000/api/users/student/${studentId}/results`)
+      const res = await axios.get(`http://localhost:5000/api/users/student/${childId}/results`)
       setResults(res.data.results)
     } catch (err) { console.error(err) }
     finally { setLoadingResults(false) }
   }
 
-  const selectedStudent = students.find((s) => s._id === selected)
+  const handleLinkStudent = async (e) => {
+    e.preventDefault()
+    setLinking(true)
+    setLinkMsg('')
+    try {
+      const res = await axios.post('http://localhost:5000/api/users/link-student', { email: linkEmail })
+      setLinkMsg(`✅ ${res.data.student.name} linked successfully!`)
+      setLinkEmail('')
+      fetchChildren() // refresh list
+      setTimeout(() => { setLinkMsg(''); setShowLink(false) }, 2500)
+    } catch (err) {
+      setLinkMsg(`❌ ${err.response?.data?.message || 'Failed to link student'}`)
+    } finally { setLinking(false) }
+  }
+
+  const selectedChild = children.find((c) => c._id === selected)
   const avgScore = results.length
     ? Math.round(results.reduce((a, b) => a + b.score, 0) / results.length)
     : 0
@@ -54,46 +73,78 @@ export default function ParentDashboard() {
           <h1>Parent Dashboard 👨‍👩‍👧</h1>
           <p>Welcome, {user?.name} — track your child's learning progress</p>
         </div>
+        <button className="dash-start-btn" onClick={() => setShowLink((p) => !p)}>
+          {showLink ? 'Cancel' : '+ Link a Child'}
+        </button>
       </div>
 
-      {students.length === 0 ? (
+      {/* Link Child Form */}
+      {showLink && (
+        <div className="parent-link-form">
+          <h3>🔗 Link your child's account</h3>
+          <p>Enter your child's registered email address to link their account to yours.</p>
+          <form className="link-form-row" onSubmit={handleLinkStudent}>
+            <input
+              className="link-input"
+              type="email"
+              placeholder="Child's email address"
+              value={linkEmail}
+              onChange={(e) => setLinkEmail(e.target.value)}
+              required
+            />
+            <button className="link-btn" type="submit" disabled={linking}>
+              {linking ? 'Linking...' : 'Link Account'}
+            </button>
+          </form>
+          {linkMsg && <p className="link-msg">{linkMsg}</p>}
+        </div>
+      )}
+
+      {children.length === 0 ? (
         <div className="dash-empty">
-          <p>No students linked to your account yet.</p>
-          <p>Please contact a teacher to link your child's account.</p>
+          <span style={{ fontSize: '3em', display: 'block', marginBottom: '16px' }}>🌱</span>
+          <p>No children linked yet.</p>
+          <p>Click <strong>"+ Link a Child"</strong> above and enter your child's registered email to get started.</p>
         </div>
       ) : (
         <>
-          {/* Student Selector */}
-          {students.length > 1 && (
+          {/* Child Selector tabs */}
+          {children.length > 1 && (
             <div className="parent-student-tabs">
-              {students.map((s) => (
+              {children.map((c) => (
                 <button
-                  key={s._id}
-                  className={`parent-tab ${selected === s._id ? 'active' : ''}`}
-                  onClick={() => handleSelectStudent(s._id)}
+                  key={c._id}
+                  className={`parent-tab ${selected === c._id ? 'active' : ''}`}
+                  onClick={() => handleSelectChild(c._id)}
                 >
-                  {s.name}
+                  {c.name}
                 </button>
               ))}
             </div>
           )}
 
-          {/* Student Summary */}
-          {selectedStudent && (
+          {/* Child Summary */}
+          {selectedChild && (
             <div className="parent-student-summary">
-              <div className="parent-avatar">{selectedStudent.learningProfile?.[0] || '🌸'}</div>
+              <div className="parent-avatar">
+                {selectedChild.name?.charAt(0).toUpperCase()}
+              </div>
               <div className="parent-student-info">
-                <h2>{selectedStudent.name}</h2>
-                <p>{selectedStudent.learningProfile || 'No learning profile set'}</p>
+                <h2>{selectedChild.name}</h2>
+                <p>{selectedChild.learningProfile && selectedChild.learningProfile !== 'None'
+                  ? `Learning profile: ${selectedChild.learningProfile}`
+                  : 'No learning profile set'}
+                </p>
+                <p style={{ fontSize: '0.85em', color: '#bbb' }}>{selectedChild.email}</p>
               </div>
               <div className="parent-quick-stats">
                 <div className="parent-stat">
                   <strong>{results.length}</strong>
-                  <span>Quizzes Taken</span>
+                  <span>Quizzes</span>
                 </div>
                 <div className="parent-stat">
                   <strong>{avgScore}%</strong>
-                  <span>Average Score</span>
+                  <span>Avg Score</span>
                 </div>
                 <div className="parent-stat">
                   <strong style={{ textTransform: 'capitalize' }}>
@@ -112,7 +163,7 @@ export default function ParentDashboard() {
               <p className="dash-loading-small">Loading results...</p>
             ) : results.length === 0 ? (
               <div className="dash-empty">
-                <p>No quizzes taken yet.</p>
+                <p>No quizzes taken yet by {selectedChild?.name}.</p>
               </div>
             ) : (
               <div className="parent-results-list">
@@ -123,9 +174,9 @@ export default function ParentDashboard() {
                       <h4 style={{ textTransform: 'capitalize' }}>{r.subject}</h4>
                       <p>{new Date(r.takenAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                       <div className="parent-readiness-row">
-                        <span>🎯 {r.readiness?.focus}/5</span>
-                        <span>💪 {r.readiness?.confidence}/5</span>
-                        <span>⚡ {r.readiness?.energy}/5</span>
+                        <span>🎯 Focus: {r.readiness?.focus}/5</span>
+                        <span>💪 Confidence: {r.readiness?.confidence}/5</span>
+                        <span>⚡ Energy: {r.readiness?.energy}/5</span>
                       </div>
                     </div>
                     <div className="parent-result-right">

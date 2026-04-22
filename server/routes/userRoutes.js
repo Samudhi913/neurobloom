@@ -53,4 +53,50 @@ router.get('/my-stats', protect, authorize('student'), async (req, res) => {
   }
 });
 
+// @POST /api/users/link-student — parent links a child by email
+router.post('/link-student', protect, authorize('parent'), async (req, res) => {
+  const { email } = req.body;
+  try {
+    const student = await User.findOne({ email, role: 'student' });
+    if (!student) {
+      return res.status(404).json({ message: 'No student found with that email' });
+    }
+    const parent = await User.findById(req.user._id);
+    if (parent.linkedStudents.includes(student._id)) {
+      return res.status(400).json({ message: 'Student already linked' });
+    }
+    parent.linkedStudents.push(student._id);
+    await parent.save();
+    res.json({ message: 'Student linked successfully', student: { id: student._id, name: student.name, email: student.email } });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+// @GET /api/users/my-children — parent gets only their linked students
+router.get('/my-children', protect, authorize('parent'), async (req, res) => {
+  try {
+    const parent = await User.findById(req.user._id);
+    const children = await User.find({ 
+      _id: { $in: parent.linkedStudents } 
+    }).select('-password');
+
+    const childrenWithStats = await Promise.all(
+      children.map(async (c) => {
+        const results = await QuizResult.find({ student: c._id });
+        const avgScore = results.length
+          ? Math.round(results.reduce((a, b) => a + b.score, 0) / results.length)
+          : null;
+        const lastQuiz = results.length
+          ? results.sort((a, b) => new Date(b.takenAt) - new Date(a.takenAt))[0]
+          : null;
+        return { ...c.toObject(), totalQuizzes: results.length, avgScore, lastQuiz };
+      })
+    );
+    res.json(childrenWithStats);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 module.exports = router;

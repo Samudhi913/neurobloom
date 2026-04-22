@@ -1,5 +1,7 @@
 const QuizResult    = require('../models/QuizResult');
 const quizQuestions = require('../data/quizQuestions');
+const { predict }   = require('../ml/recommend');
+const User          = require('../models/User');
 
 const getQuestions = (req, res) => {
   const { subject } = req.params;
@@ -16,36 +18,49 @@ const submitQuiz = async (req, res) => {
   const questions              = quizQuestions[subject];
   if (!questions) return res.status(404).json({ message: 'Subject not found' });
 
+  // Grade the quiz
   let correct = 0;
   const gradedAnswers = answers.map(({ questionId, selected }) => {
-    const question = questions.find((q) => q.id === questionId);
+    const question  = questions.find((q) => q.id === questionId);
     const isCorrect = question && question.answer === selected;
     if (isCorrect) correct++;
     return { questionId, selected, correct: isCorrect };
   });
 
-  const score         = Math.round((correct / questions.length) * 100);
-  const readinessAvg  = readiness ? ((readiness.focus + readiness.confidence + readiness.energy) / 3) : 3;
-  const readinessScore = ((readinessAvg - 1) / 4) * 100;
-  const combinedScore  = score * 0.7 + readinessScore * 0.3;
+  const score = Math.round((correct / questions.length) * 100);
 
-  let recommendedDifficulty;
-  if (combinedScore >= 70)      recommendedDifficulty = 'hard';
-  else if (combinedScore >= 40) recommendedDifficulty = 'intermediate';
-  else                          recommendedDifficulty = 'easy';
+  // Get student learning profile
+  const student = await User.findById(studentId);
+  const learningProfile = student?.learningProfile || 'None';
 
+  // Use ML to predict difficulty
+  const mlResult = predict(
+    score,
+    readiness || { focus: 3, confidence: 3, energy: 3 },
+    learningProfile
+  );
+
+  const recommendedDifficulty = mlResult.difficulty;
+
+  // Save result
   const result = await QuizResult.create({
-    student: studentId, subject, score, answers: gradedAnswers,
+    student: studentId,
+    subject,
+    score,
+    answers: gradedAnswers,
     readiness: readiness || { focus: 3, confidence: 3, energy: 3 },
     recommendedDifficulty,
   });
 
   res.status(201).json({
-    score, correct, total: questions.length,
-    readinessScore: Math.round(readinessScore),
-    combinedScore:  Math.round(combinedScore),
+    score,
+    correct,
+    total:                 questions.length,
     recommendedDifficulty,
-    resultId: result._id,
+    confidence:            mlResult.confidence,
+    probabilities:         mlResult.probabilities,
+    usedML:                mlResult.confidence !== null,
+    resultId:              result._id,
   });
 };
 
